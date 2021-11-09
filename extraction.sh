@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # Pour chaque département, produire une liste des personnels
-# avec le champ correspondant à l'heure de l'émargement
-# ou un champ vide si le personnel n'a pas émargé
+
+# dépendances : GNU sed (à cause de l’option -z)
+# Gnumeric pour l’export en ODS
 
 
 if [ -d export ]; then
@@ -12,7 +13,7 @@ fi
 mkdir -p export/{CSV,ODS}
 
 # -z permet que le délimiteur soit \0 et pas \n
-sed -i -z -e 's/\"Par e-mail\nPar téléphone\"/Par e-mail et par téléphone/g' fichiers.csv
+sed -i -z -e 's/\"Par e-mail\nPar téléphone\"/Par e-mail et par téléphone/g' "${1}"
 
 # Corps DiscPLP DiscCertif Dpt-affectation Dpt-vis academie-visee mailOUtel Nom Prénom mail tel
 
@@ -27,16 +28,13 @@ while read -r line ; do
 done < departements
 wait
 
-
 (
 cd export/CSV || exit
 nom=""
     for i in *.csv ; do
         (
             nom="${i%.*}"
-            #nom=$(awk -F"," -v code="$code" '$2 ~ code {print $6}' ../../departements)
-            #mv "$i"  "$nom".csv
-            
+                       
             # Libreoffice 
             #unoconv -i FilterOptions=44,34,76 -f ods "$nom".csv
             
@@ -49,3 +47,5 @@ nom=""
 
     mv ./*.ods ../ODS/
 )
+
+awk -F',' '{print $4}' "${1}" | tr -d '\"' | sort | uniq 
