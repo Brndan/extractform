@@ -15,6 +15,9 @@ mkdir -p export/{CSV,ODS}
 # -z permet que le délimiteur soit \0 et pas \n
 sed -z -e 's/\"Par e-mail\nPar téléphone\"/Par e-mail et par téléphone/g' "${1}" |  tr -d '\"' > clean.csv
 
+# Version protable à tester
+#cat "${1}" | sed 'N;s/\nPar téléphone/ et par téléphone/' |  tr -d '\"' > clean.csv
+
 # Corps DiscPLP DiscCertif Dpt-affectation Dpt-vis academie-visee mailOUtel Nom Prénom mail tel
 
 while read -r line ; do 
