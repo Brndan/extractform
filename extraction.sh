@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Pour chaque département, produire une liste des personnels
 
-# dépendances : GNU sed (à cause de l’option -z)
+# dépendances :
 # Gnumeric pour l’export en ODS
 
 
@@ -10,13 +10,15 @@ if [ -d export ]; then
     rm -r export
 fi
 
-mkdir -p export/{CSV,ODS}
+mkdir -p export/CSV
+mkdir -p export/ODS
 
+# seulement avec GNU sed
 # -z permet que le délimiteur soit \0 et pas \n
-sed -z -e 's/\"Par e-mail\nPar téléphone\"/Par e-mail et par téléphone/g' "${1}" |  tr -d '\"' > clean.csv
+#sed -z -e 's/\"Par e-mail\nPar téléphone\"/Par e-mail et par téléphone/g' "${1}" |  tr -d '\"' > clean.csv
 
-# Version portable à tester
-# sed 'N;s/\nPar téléphone/ et par téléphone/;P;D' "${1}" |  tr -d '\"' > clean.csv
+# Version portable
+sed 'N;s/\nPar téléphone/ et par téléphone/;P;D' "${1}" |  tr -d '\"' > clean.csv
 
 # Corps DiscPLP DiscCertif Dpt-affectation Dpt-vis academie-visee mailOUtel Nom Prénom mail tel
 
